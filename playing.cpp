@@ -49,7 +49,7 @@ bool possBox(std::string possible[N][N], int lrowBound[2], int lcolBound[2], int
         }
 
     }
-    // cout<< "possBox";
+    cout<< "possBox";
     return true;
 }
 bool emptyBox(int checkValue){
@@ -127,9 +127,10 @@ void printSuduku2(std::string griddy[N][N])
         std::cout << endl;
     }
 }
-bool solvePuzzle(int griddy[N][N], std::string poss[N][N]){
+bool solvePuzzle(int griddy[N][N]){
     bool change =false;
     int row=0, column=0;
+    std::string poss[N][N];
     for (row; row<N;row++){
         for (column=0;column<N; column++)
         {
@@ -157,17 +158,9 @@ bool solvePuzzle(int griddy[N][N], std::string poss[N][N]){
 
         if (change==true){
             cout << "pre ";
-            std::string poss[N][N];
-            solvePuzzle(griddy, poss);
+            solvePuzzle(griddy);
             cout << "loop";
             return false;
-        }
-        for (row=0; row<N; row++){
-            for (column=0; column<N; column++){
-                if(poss[row][column].empty()){
-                    poss[row][column]="123456789";
-                }
-            }
         }
         for (row=0; row<N;row++){
         for (column=0;column<N; column++)
@@ -192,8 +185,7 @@ bool solvePuzzle(int griddy[N][N], std::string poss[N][N]){
                     int hold_int=std::stoi(&hold_char);
                     if (possRow(poss, row, hold_int)||possCol(poss,column, hold_int)||possBox(poss,lrow,lcol,hold_int) && griddy[row][column]!=0){
                         griddy[row][column]=hold_int;
-                        std::string poss[N][N];
-                        solvePuzzle(griddy,poss);
+                        solvePuzzle(griddy);
                         return false;
                     }
                     //std::cout << (holdnum) << " ";
@@ -210,7 +202,7 @@ bool solvePuzzle(int griddy[N][N], std::string poss[N][N]){
 
 int main()
 {   
-     int spanner[N][N] = {{5, 0, 0, 4, 6, 7, 3, 0, 9},
+    /* int spanner[N][N] = {{5, 0, 0, 4, 6, 7, 3, 0, 9},
                       {9, 0, 3, 8, 1, 0, 4, 2, 7},
                       {1, 7, 4, 2, 0, 3, 0, 0, 0},
                       {2, 3, 1, 9, 7, 6, 8, 5, 4},
@@ -218,8 +210,8 @@ int main()
                       {4, 9, 6, 3, 0, 8, 1, 7, 2},
                       {0, 0, 0, 0, 8, 9, 2, 6, 0},
                       {7, 8, 2, 6, 4, 1, 0, 0, 5},
-                      {0, 1, 0, 0, 0, 0, 7, 0, 8}}; 
-    /*int spanner[N][N] = {{0, 0, 0, 7, 4, 8, 6, 0, 0},
+                      {0, 1, 0, 0, 0, 0, 7, 0, 8}}; */
+    int spanner[N][N] = {{0, 0, 0, 7, 4, 8, 6, 0, 0},
                       {7, 0, 0, 0, 0, 3, 0, 1, 0},
                       {3, 0, 6, 0, 0, 5, 0, 0, 0},
                       {5, 2, 0, 8, 0, 0, 1, 4, 3},
@@ -227,10 +219,9 @@ int main()
                       {8, 3, 4, 0, 0, 9, 0, 7, 6},
                       {0, 0, 0, 3, 0, 0, 8, 0, 2},
                       {0, 5, 0, 4, 0, 0, 0, 0, 1},
-                      {0, 0, 3, 5, 6, 2, 0, 0, 0}};*/
-    std::string passposs[N][N];
+                      {0, 0, 3, 5, 6, 2, 0, 0, 0}};
     printSuduku(spanner);
-    solvePuzzle(spanner, passposs);
+    solvePuzzle(spanner);
 
 
     return 1;
