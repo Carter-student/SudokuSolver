@@ -141,10 +141,6 @@ bool isEmpty(std::string emptyGuy){
 }
 bool solvePuzzle(int griddy[N][N]){
     // add another outer loop
-    bool bigChanges = true;
-    int bigCounter=0;
-while (bigChanges){
-   bigCounter++;
     bool changes = true;
     while (changes){
         std::string poss[N][N];
@@ -165,7 +161,6 @@ while (bigChanges){
                 if (poss[row][column].length()==1){
                     griddy[row][column]=stoi(poss[row][column]);
                     changes=true;
-                    bigCounter=0;
                 }
             }
         }}
@@ -210,18 +205,13 @@ while (bigChanges){
                         if(possRow(poss, row, ivalue) || possCol(poss, column, ivalue) ){
                             griddy[row][column]=ivalue;
                             changes= true;
-                            bigCounter=0;
                         }
                     }
                 }
             }}
-      
-    }
-      if (bigCounter>1){
-            bigChanges=false;
-        }
-    }
     printSuduku2(poss);
+
+    }
     cout << endl << "new" << endl;
     printSuduku(griddy);
     return true;
