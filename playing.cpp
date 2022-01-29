@@ -7,7 +7,8 @@
 using namespace std;
 #define empty_var 0
 #define N 9
-int spanner[N][N];
+int griddy[N][N];
+
 int rowBound[2];
 
 bool possRow(std::string possible[N][N], int pRow, int valueCheck){
@@ -75,27 +76,35 @@ void whatBox(int griddy[N][N], int row_col){
 
 
 bool checkRow(int griddy[N][N], int pRow, int valueCheck){
+    int check_counter=1;
     for (int column=0; column<N; column++){
         if (valueCheck==griddy[pRow][column]){
-            return false;
+            if  (check_counter==1){
+            return false;}
+            else {check_counter=1;}
         }
     }
     return true;
 }
 bool checkColumn(int griddy[N][N], int pCol, int valueCheck){
+    int check_counter=1;
     for (int row=0; row<N; row++){
         if (valueCheck==griddy[row][pCol]){
-            return false;
+            if (check_counter==1){
+            return false;}
+            else{check_counter=1;}
         }
     }
     return true;
 }
 bool checkBox(int griddy[N][N], int lrowBound[2], int lcolBound[2], int valueCheck){
-    
+    int check_counter=1;
     for (lrowBound[0];lrowBound[0]<lrowBound[1];lrowBound++){
         for (lcolBound[0];lcolBound[0]<lcolBound[1];lcolBound++){
             if (griddy[lrowBound[0]][lcolBound[0]]==valueCheck){
-                return false;
+                if (check_counter==1){
+                return false;}
+                else{check_counter=1;}
             }
         }
 
@@ -131,86 +140,37 @@ bool isEmpty(std::string emptyGuy){
     return !emptyGuy.empty();
 }
 bool solvePuzzle(int griddy[N][N]){
-    bool change =false;
-    int row=0, column=0;
-    std::string poss[N][N];
-    for (row; row<N;row++){
-        for (column=0;column<N; column++)
-        {
-            whatBox(griddy, row);
-            int lrow[2];
-            lrow[0]=rowBound[0];
-            lrow[1]=rowBound[1];
-            whatBox(griddy, column);
-            int lcol[2];
-            lcol[0]=rowBound[0];
-            lcol[1]=rowBound[1];
-            for (int i=1; i<10; i++){
-                if(checkColumn(griddy,column, i) && checkRow(griddy, row, i) && checkBox(griddy, lrow, lcol, i) ){
-                    if (!emptyBox(griddy[row][column])){//We made this a change
-                        poss[row][column]=griddy[row][column];
-                    }else{
-                        poss[row][column].append(std::to_string(i));}
+    bool changes = true;
+    while (changes){
+        std::string poss[N][N];
+        changes=false;
+        for (int row=0; row<N; row++){
+            for (int column=0;column<N; column++){
+                whatBox(griddy, row);
+                int lrow[2];
+                lrow[0]=rowBound[0]; lrow[1]= rowBound[1];
+                whatBox(griddy, column);
+                int lcol[2];
+                lcol[0]=rowBound[0]; lcol[1]= rowBound[1];
+                for (int value=1; value<10; value++){
+                    if (!emptyBox(griddy[row][column]) && checkBox(griddy, lrow, lcol, value) && checkRow(griddy, row, value) && checkColumn(griddy, column, value)){
+                        poss[row][column].append(to_string(value));
+                        }
+                    }
+                if (poss[row][column].length()==1){
+                    griddy[row][column]=stoi(poss[row][column]);
+                    changes=true;
                 }
             }
         }}
-        for (row=0; row<N;row++){
-        for (column=0;column<N; column++)
-        {   std::string vlad = poss[row][column];
-            if (poss[row][column].length()==1 && !emptyBox(griddy[row][column]) && vlad.empty()==true){//not sure why vlad needs to be true
-            int num=stoi(poss[row][column]);//error occurs here 
-            griddy[row][column]=num;
-            change=true;
-        }
-
-        if (change==true){
-            cout << "pre ";
-            solvePuzzle(griddy);
-            cout << "loop";
-            return false;
-        }
-        //deductive
-        for (row=0; row<N;row++){
-        for (column=0;column<N; column++)
-        {
-            whatBox(griddy, row);
-            int lrow[2];
-            lrow[0]=rowBound[0];
-            lrow[1]=rowBound[1];
-            whatBox(griddy, column);
-            int lcol[2];
-            lcol[0]=rowBound[0];
-            lcol[1]=rowBound[1];
-            std::string hold=poss[row][column];
-            if (isEmpty(hold)) {//not sure why we had to remove the not from here
-                int counter=poss[row][column].length();
-                for (int ii=0; ii<N; ii++){
-                    
-                    if (counter == ii){
-                        break;
-                    }
-                    char hold_char=hold[ii];
-                    int hold_int=std::stoi(&hold_char);
-                    if (possRow(poss, row, hold_int)||possCol(poss,column, hold_int)||possBox(poss,lrow,lcol,hold_int) && griddy[row][column]!=0){
-                        griddy[row][column]=hold_int;
-                        solvePuzzle(griddy);
-                        return false;
-                    }
-                    //std::cout << (holdnum) << " ";
-                    
-                }
-            }
-
-        }}
-
-        }}
-        cout << endl << "New" << endl;
-        printSuduku(griddy);
-        return false;}
+    cout << endl << "new" << endl;
+    printSuduku(griddy);
+    return true;
+    }
 
 int main()
 {  
-    /* int spanner[N][N] = {{5, 0, 0, 4, 6, 7, 3, 0, 9},
+    /* int griddy[N][N] = {{5, 0, 0, 4, 6, 7, 3, 0, 9},
                       {9, 0, 3, 8, 1, 0, 4, 2, 7},
                       {1, 7, 4, 2, 0, 3, 0, 0, 0},
                       {2, 3, 1, 9, 7, 6, 8, 5, 4},
@@ -219,7 +179,7 @@ int main()
                       {0, 0, 0, 0, 8, 9, 2, 6, 0},
                       {7, 8, 2, 6, 4, 1, 0, 0, 5},
                       {0, 1, 0, 0, 0, 0, 7, 0, 8}}; */
-    int spanner[N][N] = {{0, 0, 0, 7, 4, 8, 6, 0, 0},
+    int griddy[N][N] = {{0, 0, 0, 7, 4, 8, 6, 0, 0},
                       {7, 0, 0, 0, 0, 3, 0, 1, 0},
                       {3, 0, 6, 0, 0, 5, 0, 0, 0},
                       {5, 2, 0, 8, 0, 0, 1, 4, 3},
@@ -228,8 +188,8 @@ int main()
                       {0, 0, 0, 3, 0, 0, 8, 0, 2},
                       {0, 5, 0, 4, 0, 0, 0, 0, 1},
                       {0, 0, 3, 5, 6, 2, 0, 0, 0}};
-    printSuduku(spanner);
-    solvePuzzle(spanner);
+    printSuduku(griddy);
+    solvePuzzle(griddy);
 
 
     return 1;
