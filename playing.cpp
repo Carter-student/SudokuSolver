@@ -140,6 +140,7 @@ bool isEmpty(std::string emptyGuy){
     return !emptyGuy.empty();
 }
 bool solvePuzzle(int griddy[N][N]){
+    // add another outer loop
     bool changes = true;
     while (changes){
         std::string poss[N][N];
@@ -163,6 +164,54 @@ bool solvePuzzle(int griddy[N][N]){
                 }
             }
         }}
+    changes= true;
+    while(changes){
+        std::string poss[N][N];
+        changes=false;
+        for (int row=0; row<N; row++){
+            for (int column=0;column<N; column++){
+                whatBox(griddy, row);
+                int lrow[2];
+                lrow[0]=rowBound[0]; lrow[1]= rowBound[1];
+                whatBox(griddy, column);
+                int lcol[2];
+                lcol[0]=rowBound[0]; lcol[1]= rowBound[1];
+                for (int value=1; value<10; value++){
+                    if (!emptyBox(griddy[row][column]) && checkBox(griddy, lrow, lcol, value) && checkRow(griddy, row, value) && checkColumn(griddy, column, value)){
+                        poss[row][column].append(to_string(value));
+                        }
+                    }
+                if (emptyBox(griddy[row][column])){
+                    poss[row][column]=to_string(griddy[row][column]);
+                }
+
+               
+            }
+        }
+    for (int row=0; row<N; row++){
+            for (int column=0;column<N; column++){
+                whatBox(griddy, row);
+                int lrow[2];
+                lrow[0]=rowBound[0]; lrow[1]= rowBound[1];
+                whatBox(griddy, column);
+                int lcol[2];
+                lcol[0]=rowBound[0]; lcol[1]= rowBound[1];
+                if (poss[row][column].length()>1){
+                    int counter=poss[row][column].length();
+                    for (int ii=0; ii<N; ii++){
+                        if (counter==ii){break;}
+                        char cvalue= poss[row][column][ii];
+                        int ivalue= stoi(&cvalue);
+                        if(possRow(poss, row, ivalue) || possCol(poss, column, ivalue) ){
+                            griddy[row][column]=ivalue;
+                            changes= true;
+                        }
+                    }
+                }
+            }}
+    printSuduku2(poss);
+
+    }
     cout << endl << "new" << endl;
     printSuduku(griddy);
     return true;
