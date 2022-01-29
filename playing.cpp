@@ -127,6 +127,9 @@ void printSuduku2(std::string griddy[N][N])
         std::cout << endl;
     }
 }
+bool isEmpty(std::string emptyGuy){
+    return !emptyGuy.empty();
+}
 bool solvePuzzle(int griddy[N][N]){
     bool change =false;
     int row=0, column=0;
@@ -143,15 +146,19 @@ bool solvePuzzle(int griddy[N][N]){
             lcol[0]=rowBound[0];
             lcol[1]=rowBound[1];
             for (int i=1; i<10; i++){
-                if(checkColumn(griddy,column, i) && checkRow(griddy, row, i) && checkBox(griddy, lrow, lcol, i) && !emptyBox(griddy[row][column])){
-                    poss[row][column].append(std::to_string(i));
+                if(checkColumn(griddy,column, i) && checkRow(griddy, row, i) && checkBox(griddy, lrow, lcol, i) ){
+                    if (!emptyBox(griddy[row][column])){//We made this a change
+                        poss[row][column]=griddy[row][column];
+                    }else{
+                        poss[row][column].append(std::to_string(i));}
                 }
             }
         }}
         for (row=0; row<N;row++){
         for (column=0;column<N; column++)
-        {if (poss[row][column].length()<2 && !emptyBox(griddy[row][column]) && poss[row][column]!=""){
-            int num=stoi(poss[row][column]);
+        {   std::string vlad = poss[row][column];
+            if (poss[row][column].length()==1 && !emptyBox(griddy[row][column]) && vlad.empty()==true){//not sure why vlad needs to be true
+            int num=stoi(poss[row][column]);//error occurs here 
             griddy[row][column]=num;
             change=true;
         }
@@ -162,6 +169,7 @@ bool solvePuzzle(int griddy[N][N]){
             cout << "loop";
             return false;
         }
+        //deductive
         for (row=0; row<N;row++){
         for (column=0;column<N; column++)
         {
@@ -174,7 +182,7 @@ bool solvePuzzle(int griddy[N][N]){
             lcol[0]=rowBound[0];
             lcol[1]=rowBound[1];
             std::string hold=poss[row][column];
-            if (!poss[row][column].empty()) {
+            if (isEmpty(hold)) {//not sure why we had to remove the not from here
                 int counter=poss[row][column].length();
                 for (int ii=0; ii<N; ii++){
                     
@@ -201,7 +209,7 @@ bool solvePuzzle(int griddy[N][N]){
         return false;}
 
 int main()
-{   
+{  
     /* int spanner[N][N] = {{5, 0, 0, 4, 6, 7, 3, 0, 9},
                       {9, 0, 3, 8, 1, 0, 4, 2, 7},
                       {1, 7, 4, 2, 0, 3, 0, 0, 0},
