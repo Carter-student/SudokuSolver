@@ -38,12 +38,14 @@ bool possCol(std::string possible[N][N], int pCol, int valueCheck){
     return true;
     }
 bool possBox(std::string possible[N][N], int lrowBound[2], int lcolBound[2], int valueCheck){
-        int count=0;
-        int lrow=lrowBound[0], hrow=lrowBound[1];
-        int lcol=lcolBound[0], hcol=lcolBound[1];
-        for (lrow;lrow<hrow;lrow++){
-        for (lcol;lcol<hcol;lcol++){
-            if (possible[lrow][lcol].find(std::to_string(valueCheck))!=-1){
+    int check_counter=1;
+    int rowStart; rowStart=lrowBound[0];
+    int colStart; colStart=lcolBound[0];
+    int count=0;
+    for (int row = 0;row<3;row++){
+        for (int column =0;column<3;column++){
+            int positionR=row+rowStart; int positionC=column+colStart;
+            if (possible[positionR][positionC].find(std::to_string(valueCheck))!=-1){
                 if (count>0){
                 return false;}
                 count=1;
@@ -51,7 +53,7 @@ bool possBox(std::string possible[N][N], int lrowBound[2], int lcolBound[2], int
         }
 
     }
-    cout<< "possBox";
+    //cout<< "possBox";
     return true;
 }
 bool emptyBox(int checkValue){
@@ -203,7 +205,7 @@ std::string destructiveLogic(int griddy[N][N]){
                             if (counter==ii){break;}
                             char cvalue= poss[row][column][ii];
                             int ivalue= stoi(&cvalue);
-                            if(possRow(poss, row, ivalue) || possCol(poss, column, ivalue) ){//fix possBox
+                            if(possRow(poss, row, ivalue) || possCol(poss, column, ivalue) || possBox(poss,lrow,lcol,ivalue) ){//fix possBox
                                 passString.append(to_string(row));
                                 passString.append(to_string(column));
                                 passString.append(to_string(ivalue));
@@ -244,7 +246,7 @@ bool solvePuzzle(int griddy[N][N]){
         }else{break;}
       
     }// end of while loop
-      if (bigCounter>1){
+      if (bigCounter>2){//we changed this from 1
             bigChanges=false;}
     }
     cout << endl << "new" << endl;
@@ -272,15 +274,15 @@ int main()
                       {0, 0, 0, 3, 0, 0, 8, 0, 2},
                       {0, 5, 0, 4, 0, 0, 0, 0, 1},
                       {0, 0, 3, 5, 6, 2, 0, 0, 0}};*/
-    int griddy[N][N] = { {0, 0, 0, 0, 0, 2, 8, 0, 0}, 
-         {0, 0, 3, 7, 0, 9, 0, 0, 0}, 
-         {0, 0, 0, 5, 1, 0, 0, 2, 0}, 
-         {5, 0, 1, 0, 0, 0, 0, 8, 7}, 
-         {0, 6, 0, 0, 0, 0, 0, 5, 0}, 
-         {4, 8, 0, 0, 0, 0, 1, 0, 3},  
-         {0, 4, 0, 0, 2, 7, 0, 0, 0}, 
-         {0, 0, 0, 8, 0, 4, 6, 0, 0},  
-         {0, 0, 2, 3, 0, 0, 0, 0, 0} };
+    int griddy[N][N] = { {0, 0, 0, 0, 3, 0, 0, 9, 0}, 
+         {0, 3, 1, 0, 0, 9, 0, 0, 0}, 
+         {9, 0, 0, 4, 6, 5, 0, 3, 0}, 
+         {0, 0, 0, 0, 0, 7, 4, 0, 0}, 
+         {7, 9, 0, 0, 0, 0, 0, 1, 5}, 
+         {0, 0, 2, 8, 0, 0, 0, 0, 0},  
+         {0, 7, 0, 5, 4, 3, 0, 0, 8}, 
+         {0, 0, 0, 7, 0, 0, 9, 5, 0},  
+         {0, 4, 0, 0, 8, 0, 0, 0, 0} };
     cout << endl;
     printSuduku(griddy);
     solvePuzzle(griddy);
