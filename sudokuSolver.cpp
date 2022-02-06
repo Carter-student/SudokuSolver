@@ -1,3 +1,4 @@
+
 //We make a suduku solver
 //Borrowing from https://hackr.io/blog/cpp-projects
 #include <iostream>
@@ -168,6 +169,7 @@ std::string reductionLogic(int griddy[N][N]){
                         passString.append(to_string(column));
                         passString.append(poss[row][column]);
                         changes=true;
+                        return passString;//Returns 3 char string
 
                     }
                 }
@@ -209,7 +211,8 @@ std::string destructiveLogic(int griddy[N][N]){
                                 passString.append(to_string(row));
                                 passString.append(to_string(column));
                                 passString.append(to_string(ivalue));
-                                changes= true;}}}}}
+                                changes= true;
+                                return passString;}}}}}
     return passString;
 }
 bool solvePuzzle(int griddy[N][N]){
