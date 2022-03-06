@@ -5,4 +5,4 @@ It can solve Hard puzzles on websudoku.com but not Evil level puzzles. :/
 
 Sudoku puzzles must be hard coded into the code to run with 0s representing unknown values.
 
-We took the setup for this from https://hackr.io/blog/cpp-projects
+We took the idea and setup for this from https://hackr.io/blog/cpp-projects
